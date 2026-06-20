@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LaunchLens — Zero to One</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="shell">
+
+  <!-- Header -->
+  <div class="wordmark">Launch<span>Lens</span></div>
+  <p class="tagline">Turn a vague idea into a real execution plan.</p>
+
+  <!-- Phase bar -->
+  <div class="phase-bar">
+    <div class="phase-tab active" id="tab-1">1 · Idea</div>
+    <div class="phase-tab"        id="tab-2">2 · Clarify</div>
+    <div class="phase-tab"        id="tab-3">3 · Plan</div>
+  </div>
+
+  <!-- ======= PHASE 1 ======= -->
+  <div id="phase-1">
+    <div class="card">
+      <div class="card-label">Your idea</div>
+      <textarea id="idea-input"
+        placeholder="Describe your idea — rough is fine. One sentence or a whole paragraph."></textarea>
+      <div class="chips">
+        <button class="chip" onclick="fillExample(0)">Study partner app</button>
+        <button class="chip" onclick="fillExample(1)">AI tutoring startup</button>
+        <button class="chip" onclick="fillExample(2)">Campus food rescue</button>
+        <button class="chip" onclick="fillExample(3)">Freelance portfolio</button>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="startClarify()">Clarify my idea →</button>
+  </div>
+
+  <!-- ======= PHASE 2 ======= -->
+  <div id="phase-2" class="hidden">
+    <div id="p2-loading" class="loading">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <p>Analyzing your idea...</p>
+    </div>
+    <div id="p2-content" class="hidden">
+      <div class="card">
+        <div class="card-label">A few quick questions</div>
+        <div id="questions-list"></div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-ghost" onclick="goPhase(1)">← Back</button>
+        <button class="btn-primary" onclick="buildPlan()">Build my plan →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= PHASE 3 ======= -->
+  <div id="phase-3" class="hidden">
+    <div id="p3-loading" class="loading">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <p>Building your execution plan...</p>
+    </div>
+    <div id="p3-content" class="hidden fade-in">
+
+      <div class="card">
+        <div class="card-label">Clarified idea</div>
+        <p class="clarified-text" id="clarified-idea"></p>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Key assumptions</div>
+        <div id="assumptions-list"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Risks to watch</div>
+        <div id="risks-list"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Milestones</div>
+        <div id="milestones-list"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Your first real step</div>
+        <div class="first-step-box">
+          <div class="first-step-label">Do this in the next 48 hours</div>
+          <div class="first-step-text" id="first-step-text"></div>
+          <div class="first-step-time" id="first-step-time"></div>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        LaunchLens surfaces structure and surfaces hidden risks — it does not predict success or make decisions for you.
+        Validate every assumption with real people before committing time or money. You stay in control of every choice.
+      </div>
+
+      <div class="nav-row" style="margin-top:1.5rem;">
+        <button class="btn-ghost" onclick="reset()">← Start over</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
