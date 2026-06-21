@@ -1,4 +1,4 @@
-import { getClarifyingQuestions, getExecutionPlan } from './api.js';
+import { getExecutionPlan } from './api.js';
 
 const examples = [
   "I want to build an app that helps college students find study partners based on their courses and availability.",
@@ -7,69 +7,27 @@ const examples = [
   "I want to build a freelance design portfolio and land my first three paying clients within 2 months."
 ];
 
-let currentIdea = "";
-let phaseQuestions = [];
-
-// ---- Navigation ----
-function goPhase(n) {
-  [1, 2, 3].forEach(i => {
-    document.getElementById(`phase-${i}`).classList.add("hidden");
-    const tab = document.getElementById(`tab-${i}`);
-    tab.classList.remove("active", "done");
-    if (i < n) tab.classList.add("done");
-  });
-  document.getElementById(`phase-${n}`).classList.remove("hidden");
-  document.getElementById(`tab-${n}`).classList.add("active");
-}
-window.goPhase = goPhase;
-
-// ---- Examples ----
 window.fillExample = (i) => {
   document.getElementById("idea-input").value = examples[i];
 };
 
-// ---- Phase 1 → 2 ----
-window.startClarify = async () => {
+window.startPlan = async () => {
   const idea = document.getElementById("idea-input").value.trim();
   if (!idea) return;
-  currentIdea = idea;
-  goPhase(2);
-  show("p2-loading"); hide("p2-content");
-
-  try {
-    const questions = await getClarifyingQuestions(idea);
-    phaseQuestions = questions;
-    const list = document.getElementById("questions-list");
-    list.innerHTML = questions.map(q => `
-      <div class="q-block">
-        <p>${q.question}</p>
-        <input type="text" data-qid="${q.id}" placeholder="Your answer..." />
-      </div>`).join("");
-    hide("p2-loading"); show("p2-content");
-  } catch (e) {
-    document.getElementById("p2-loading").innerHTML =
-      `<p style="color:#F87171;font-size:14px;">Failed to load questions. Check your connection.</p>`;
-  }
-};
-
-// ---- Phase 2 → 3 ----
-window.buildPlan = async () => {
-  const inputs = document.querySelectorAll("#questions-list input");
-  const answers = Array.from(inputs).map(inp => inp.value || "(not answered)");
   goPhase(3);
-  show("p3-loading"); hide("p3-content");
-
+  show("p3-loading");
+  hide("p3-content");
   try {
-    const plan = await getExecutionPlan(currentIdea, answers);
+    const plan = await getExecutionPlan(idea);
     renderPlan(plan);
-    hide("p3-loading"); show("p3-content");
+    hide("p3-loading");
+    show("p3-content");
   } catch (e) {
     document.getElementById("p3-loading").innerHTML =
-      `<p style="color:#F87171;font-size:14px;">Failed to build plan. Please try again.</p>`;
+      `<p style="color:#C2692A;font-size:14px;">Something went wrong: ${e.message}. Please try again.</p>`;
   }
 };
 
-// ---- Render plan ----
 function renderPlan(plan) {
   document.getElementById("clarified-idea").textContent = plan.clarifiedIdea;
 
@@ -83,27 +41,35 @@ function renderPlan(plan) {
             <p class="risk-note">${r.note}</p>`;
   }).join("");
 
-  document.getElementById("milestones-list").innerHTML = plan.milestones.map((m, i) => `
-    <div class="milestone">
-      <div class="m-num">${i + 1}</div>
-      <div>
-        <div class="m-title">${m.title} <span class="m-time">${m.timeframe}</span></div>
-        <div class="m-detail">${m.detail}</div>
-      </div>
-    </div>`).join("");
+  document.getElementById("milestones-list").innerHTML =
+    plan.milestones.map((m, i) => `
+      <div class="milestone">
+        <div class="m-num">${i + 1}</div>
+        <div>
+          <div class="m-title">${m.title}<span class="m-time">${m.timeframe}</span></div>
+          <div class="m-detail">${m.detail}</div>
+        </div>
+      </div>`).join("");
 
   document.getElementById("first-step-text").textContent = plan.firstStep;
   document.getElementById("first-step-time").textContent = plan.firstStepTime;
 }
 
-// ---- Reset ----
 window.reset = () => {
   document.getElementById("idea-input").value = "";
-  phaseQuestions = [];
-  currentIdea = "";
   goPhase(1);
 };
 
-// ---- Helpers ----
+function goPhase(n) {
+  [1, 3].forEach(i => {
+    document.getElementById(`phase-${i}`).classList.add("hidden");
+    const t = document.getElementById(`tab-${i}`);
+    t.classList.remove("active", "done");
+    if (i < n) t.classList.add("done");
+  });
+  document.getElementById(`phase-${n}`).classList.remove("hidden");
+  document.getElementById(`tab-${n}`).classList.add("active");
+}
+
 function show(id) { document.getElementById(id).classList.remove("hidden"); }
 function hide(id) { document.getElementById(id).classList.add("hidden"); }
