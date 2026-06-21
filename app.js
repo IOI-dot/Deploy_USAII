@@ -17,7 +17,27 @@ const BLOCKED_KEYWORDS = [
   "porn","sex","naked","nude","rape","steal"
 ];
 
-window.startPlan = async () => {
+// ── Context selections (Phase 2) ─────────────────────────────────────
+const selections = {};
+
+window.selectOption = (group, value, el) => {
+  document.querySelectorAll(`[data-group="${group}"]`).forEach(b => b.classList.remove("selected"));
+  el.classList.add("selected");
+  selections[group] = value;
+};
+
+function getContext() {
+  return {
+    budget:   selections.budget   || null,
+    time:     selections.time     || null,
+    tech:     selections.tech     || null,
+    timeline: selections.timeline || null
+  };
+}
+// ─────────────────────────────────────────────────────────────────────
+
+// Phase 1 → Phase 2 (validate only, no API call yet)
+window.startPlan = () => {
   const idea = document.getElementById("idea-input").value.trim();
   if (!idea) return;
   const lower = idea.toLowerCase();
@@ -26,11 +46,18 @@ window.startPlan = async () => {
     alert("Mapstone is designed for project and startup ideas. Please describe a genuine idea you want to build.");
     return;
   }
+  goPhase(2);
+};
+
+// Phase 2 → Phase 3 (fires API with context)
+window.buildPlan = async () => {
+  const idea    = document.getElementById("idea-input").value.trim();
+  const context = getContext();
   goPhase(3);
   show("p3-loading");
   hide("p3-content");
   try {
-    const plan = await getExecutionPlan(idea);
+    const plan = await getExecutionPlan(idea, context);
     renderPlan(plan);
     hide("p3-loading");
     show("p3-content");
@@ -48,7 +75,6 @@ window.startPlan = async () => {
 window.goBack = () => goPhase(1);
 
 function renderPlan(plan) {
-  // Summary bar
   document.getElementById("summary-type").textContent =
     "Type: " + capitalize(plan.projectType || "Startup");
   document.getElementById("summary-path").textContent =
@@ -56,16 +82,13 @@ function renderPlan(plan) {
   document.getElementById("summary-confidence").textContent =
     plan.firstStepTime || "Confidence: —";
 
-  // Clarified idea
   document.getElementById("clarified-idea").textContent = plan.clarifiedIdea;
 
-  // Assumptions
   document.getElementById("assumptions-list").innerHTML =
     plan.assumptions.map(a =>
       `<div class="assumption">${a}</div>`
     ).join("");
 
-  // Risks — now uses risk-item wrapper for better spacing
   document.getElementById("risks-list").innerHTML = plan.risks.map(r => {
     const cls  = r.level === "high" ? "risk-h" : r.level === "medium" ? "risk-m" : "risk-l";
     const icon = r.level === "high" ? "⚠" : r.level === "medium" ? "●" : "✓";
@@ -76,10 +99,8 @@ function renderPlan(plan) {
       </div>`;
   }).join("");
 
-  // Execution paths
   renderPaths(plan);
 
-  // Milestones
   document.getElementById("milestones-list").innerHTML =
     plan.milestones.map((m, i) => `
       <div class="milestone">
@@ -90,21 +111,19 @@ function renderPlan(plan) {
         </div>
       </div>`).join("");
 
-  // 30/60/90
   renderDayPlan("plan-30", plan.plan30);
   renderDayPlan("plan-60", plan.plan60);
   renderDayPlan("plan-90", plan.plan90);
 
-  // First step
   document.getElementById("first-step-text").textContent = plan.firstStep;
   document.getElementById("first-step-time").textContent = plan.firstStepTime;
 }
 
 function renderPaths(plan) {
-  const paths      = plan.executionPaths  || {};
+  const paths       = plan.executionPaths  || {};
   const recommended = plan.recommendedPath || "balanced";
-  const reasoning  = plan.reasoning       || "";
-  const tradeoffs  = plan.tradeoffs       || {};
+  const reasoning   = plan.reasoning       || "";
+  const tradeoffs   = plan.tradeoffs       || {};
 
   const pathOrder  = ["conservative", "balanced", "aggressive"];
   const pathLabels = {
@@ -161,14 +180,16 @@ window.showPlan = (period) => {
 
 window.reset = () => {
   document.getElementById("idea-input").value = "";
+  Object.keys(selections).forEach(k => delete selections[k]);
+  document.querySelectorAll(".ctx-chip").forEach(b => b.classList.remove("selected"));
   goPhase(1);
 };
 
 function goPhase(n) {
-  [1,3].forEach(i => {
+  [1, 2, 3].forEach(i => {
     document.getElementById(`phase-${i}`).classList.add("hidden");
     const t = document.getElementById(`tab-${i}`);
-    t.classList.remove("active","done");
+    t.classList.remove("active", "done");
     if (i < n) t.classList.add("done");
   });
   document.getElementById(`phase-${n}`).classList.remove("hidden");

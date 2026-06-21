@@ -36,12 +36,12 @@ function mapToFrontend(data) {
   };
 }
 
-export async function getExecutionPlan(idea) {
+export async function getExecutionPlan(idea, context = {}) {
   if (USE_REAL_API) {
     const res = await fetch(`${BACKEND_URL}/api/plan`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_input: idea })
+      body: JSON.stringify({ user_input: idea, context })   // context forwarded to backend
     });
     if (!res.ok) {
       const err = await res.json();
