@@ -109,24 +109,6 @@ textarea::placeholder { color: #BBBBBB; }
 }
 .chip:hover { background: #F8DEC8; }
 
-.q-block { padding: 11px 0; border-bottom: 0.5px solid #EDEBE3; }
-.q-block:last-child { border-bottom: none; }
-.q-block p { font-size: 14px; color: #1A1A18; margin-bottom: 7px; }
-.q-block input {
-  width: 100%;
-  background: #F7F6F2;
-  border: 0.5px solid #D8D6CE;
-  border-radius: 8px;
-  color: #1A1A18;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  padding: 8px 12px;
-  outline: none;
-  transition: border-color 0.15s, background 0.15s;
-}
-.q-block input:focus { border-color: var(--accent); background: #fff; }
-.q-block input::placeholder { color: #BBBBBB; }
-
 .btn-primary {
   background: var(--accent);
   color: #fff;
@@ -205,6 +187,84 @@ textarea::placeholder { color: #BBBBBB; }
 .risk-m { background: #FAEEDA; color: #633806; }
 .risk-l { background: #EAF3DE; color: #27500A; }
 
+/* ---- Execution paths ---- */
+.paths-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.path-card {
+  border: 0.5px solid #E2E0D8;
+  border-radius: 12px;
+  padding: 1rem;
+  background: #FAFAF8;
+  cursor: default;
+  transition: border-color 0.15s;
+  position: relative;
+}
+.path-card.recommended {
+  border: 1.5px solid var(--accent);
+  background: var(--accent-bg);
+}
+.path-rec-badge {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: #fff;
+  border: 0.5px solid var(--accent-bdr);
+  border-radius: 999px;
+  padding: 2px 8px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.path-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px;
+  color: #1A1A18;
+  margin-bottom: 6px;
+  text-transform: capitalize;
+}
+.path-desc {
+  font-size: 12px;
+  color: #666660;
+  line-height: 1.5;
+}
+.path-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+.path-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #F4F3EF;
+  color: #888880;
+}
+.path-tag.accent { background: #FDF0E8; color: var(--accent); }
+.path-reasoning {
+  font-size: 13px;
+  color: #5C3010;
+  background: #FDF0E8;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 1rem;
+  line-height: 1.6;
+}
+.path-reasoning::before {
+  content: "Why this path → ";
+  font-weight: 500;
+  color: var(--accent);
+}
+
+@media (max-width: 520px) {
+  .paths-grid { grid-template-columns: 1fr; }
+}
+
+/* ---- Milestones ---- */
 .milestone {
   display: flex;
   gap: 14px;
@@ -227,6 +287,61 @@ textarea::placeholder { color: #BBBBBB; }
 .m-time  { font-size: 12px; color: #AAAAAA; margin-left: 6px; font-weight: 400; }
 .m-detail { font-size: 13px; color: #666660; margin-top: 3px; line-height: 1.5; }
 
+/* ---- 30/60/90 plan tabs ---- */
+.plan-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 1rem;
+  border-bottom: 0.5px solid #EDEBE3;
+  padding-bottom: 0.75rem;
+}
+.plan-tab {
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  color: #AAAAAA;
+  background: transparent;
+  border: 0.5px solid #E2E0D8;
+  border-radius: 999px;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.plan-tab:hover { background: #F4F3EF; color: #888880; }
+.plan-tab.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.plan-item {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  color: #444440;
+  padding: 7px 0;
+  border-bottom: 0.5px solid #EDEBE3;
+  line-height: 1.5;
+}
+.plan-item:last-child { border-bottom: none; }
+.plan-item::before {
+  content: counter(plan-counter);
+  counter-increment: plan-counter;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #F4F3EF;
+  color: #888880;
+  font-size: 11px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.plan-content { counter-reset: plan-counter; }
+
+/* ---- First step ---- */
 .first-step-box {
   background: var(--accent-bg);
   border: 0.5px solid var(--accent-bdr);

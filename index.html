@@ -56,9 +56,28 @@
         <div id="risks-list"></div>
       </div>
 
+      <!-- EXECUTION PATHS -->
+      <div class="card">
+        <div class="card-label">Execution paths</div>
+        <div id="paths-list"></div>
+      </div>
+
       <div class="card">
         <div class="card-label">Milestones</div>
         <div id="milestones-list"></div>
+      </div>
+
+      <!-- 30/60/90 -->
+      <div class="card">
+        <div class="card-label">30 · 60 · 90 day plan</div>
+        <div class="plan-tabs">
+          <button class="plan-tab active" onclick="showPlan('30')">First 30 days</button>
+          <button class="plan-tab" onclick="showPlan('60')">Days 31–60</button>
+          <button class="plan-tab" onclick="showPlan('90')">Days 61–90</button>
+        </div>
+        <div id="plan-30" class="plan-content"></div>
+        <div id="plan-60" class="plan-content hidden"></div>
+        <div id="plan-90" class="plan-content hidden"></div>
       </div>
 
       <div class="card">
