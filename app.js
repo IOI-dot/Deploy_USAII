@@ -126,7 +126,7 @@ function revealPlan() {
       el.style.transition = 'opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)';
       el.style.opacity    = '1';
       el.style.transform  = 'translateY(0)';
-    }, i * 800);
+    }, i * 1000);
   });
 }
 // ─────────────────────────────────────────────────────────────────────
