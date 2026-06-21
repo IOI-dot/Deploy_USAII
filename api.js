@@ -73,7 +73,7 @@ export async function getExecutionPlan(idea, context = {}) {
     return mapToFrontend(raw);
   }
 
-  await delay(1800000);
+  await delay(1800);
   return {
     clarifiedIdea: "A focused tool that helps your target user solve a specific problem.",
     projectType: "university project",
