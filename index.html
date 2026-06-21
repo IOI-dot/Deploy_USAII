@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LaunchLens — Zero to One</title>
+  <title>Mapstone — Zero to One</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <div class="shell">
 
-  <div class="wordmark">Launch<span>Lens</span></div>
+  <div class="wordmark">Map<span>stone</span></div>
   <p class="tagline">Turn a vague idea into a real execution plan.</p>
 
   <div class="phase-bar">
@@ -41,6 +41,13 @@
     </div>
     <div id="p3-content" class="hidden fade-in">
 
+      <!-- SUMMARY BAR -->
+      <div id="summary-bar" class="summary-bar">
+        <div class="summary-pill" id="summary-type"></div>
+        <div class="summary-pill accent" id="summary-path"></div>
+        <div class="summary-pill" id="summary-confidence"></div>
+      </div>
+
       <div class="card">
         <div class="card-label">Clarified idea</div>
         <p class="clarified-text" id="clarified-idea"></p>
@@ -56,7 +63,6 @@
         <div id="risks-list"></div>
       </div>
 
-      <!-- EXECUTION PATHS -->
       <div class="card">
         <div class="card-label">Execution paths</div>
         <div id="paths-list"></div>
@@ -67,7 +73,6 @@
         <div id="milestones-list"></div>
       </div>
 
-      <!-- 30/60/90 -->
       <div class="card">
         <div class="card-label">30 · 60 · 90 day plan</div>
         <div class="plan-tabs">
@@ -90,7 +95,7 @@
       </div>
 
       <p class="disclaimer">
-        LaunchLens surfaces structure and hidden risks — it does not predict success or decide for you.
+        Mapstone surfaces structure and hidden risks — it does not predict success or decide for you.
         Validate every assumption with real people before committing time or money.
       </p>
 

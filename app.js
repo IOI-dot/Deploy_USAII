@@ -14,7 +14,7 @@ window.fillExample = (i) => {
 const BLOCKED_KEYWORDS = [
   "cocaine","heroin","meth","drug","weed","marijuana","fentanyl",
   "weapon","gun","bomb","kill","murder","hack","exploit",
-  "porn","sex","naked","nude"
+  "porn","sex","naked","nude","rape","steal"
 ];
 
 window.startPlan = async () => {
@@ -23,7 +23,7 @@ window.startPlan = async () => {
   const lower = idea.toLowerCase();
   const blocked = BLOCKED_KEYWORDS.some(w => lower.includes(w));
   if (blocked) {
-    alert("LaunchLens is designed for project and startup ideas. Please describe a genuine idea you want to build.");
+    alert("Mapstone is designed for project and startup ideas. Please describe a genuine idea you want to build.");
     return;
   }
   goPhase(3);
@@ -35,25 +35,45 @@ window.startPlan = async () => {
     hide("p3-loading");
     show("p3-content");
   } catch (e) {
-    document.getElementById("p3-loading").innerHTML =
-      `<p style="color:#C2692A;font-size:14px;">Something went wrong: ${e.message}. Please try again.</p>`;
+    document.getElementById("p3-loading").innerHTML = `
+      <div style="text-align:center;padding:2rem 0;">
+        <p style="color:#C2692A;font-size:14px;margin-bottom:1.2rem;">
+          Something went wrong. Please try again.
+        </p>
+        <button class="btn-ghost" onclick="goBack()">← Try a different idea</button>
+      </div>`;
   }
 };
 
+window.goBack = () => goPhase(1);
+
 function renderPlan(plan) {
+  // Summary bar
+  document.getElementById("summary-type").textContent =
+    "Type: " + capitalize(plan.projectType || "Startup");
+  document.getElementById("summary-path").textContent =
+    "Recommended: " + capitalize(plan.recommendedPath || "Balanced");
+  document.getElementById("summary-confidence").textContent =
+    plan.firstStepTime || "Confidence: —";
+
   // Clarified idea
   document.getElementById("clarified-idea").textContent = plan.clarifiedIdea;
 
   // Assumptions
   document.getElementById("assumptions-list").innerHTML =
-    plan.assumptions.map(a => `<div class="assumption">${a}</div>`).join("");
+    plan.assumptions.map(a =>
+      `<div class="assumption">${a}</div>`
+    ).join("");
 
-  // Risks
+  // Risks — now uses risk-item wrapper for better spacing
   document.getElementById("risks-list").innerHTML = plan.risks.map(r => {
-    const cls = r.level === "high" ? "risk-h" : r.level === "medium" ? "risk-m" : "risk-l";
+    const cls  = r.level === "high" ? "risk-h" : r.level === "medium" ? "risk-m" : "risk-l";
     const icon = r.level === "high" ? "⚠" : r.level === "medium" ? "●" : "✓";
-    return `<span class="risk-badge ${cls}">${icon} ${r.label}</span>
-            <p class="risk-note">${r.note}</p>`;
+    return `
+      <div class="risk-item">
+        <span class="risk-badge ${cls}">${icon} ${r.label}</span>
+        <p class="risk-note">${r.note}</p>
+      </div>`;
   }).join("");
 
   // Execution paths
@@ -81,24 +101,23 @@ function renderPlan(plan) {
 }
 
 function renderPaths(plan) {
-  const paths = plan.executionPaths || {};
+  const paths      = plan.executionPaths  || {};
   const recommended = plan.recommendedPath || "balanced";
-  const reasoning = plan.reasoning || "";
-  const tradeoffs = plan.tradeoffs || {};
+  const reasoning  = plan.reasoning       || "";
+  const tradeoffs  = plan.tradeoffs       || {};
 
-  const pathOrder = ["conservative", "balanced", "aggressive"];
+  const pathOrder  = ["conservative", "balanced", "aggressive"];
   const pathLabels = {
-    conservative: { speed: "Slow", cost: "Low", risk: "Low" },
+    conservative: { speed: "Slow",   cost: "Low",    risk: "Low"    },
     balanced:     { speed: "Medium", cost: "Medium", risk: "Medium" },
-    aggressive:   { speed: "Fast", cost: "High", risk: "High" }
+    aggressive:   { speed: "Fast",   cost: "High",   risk: "High"   }
   };
 
   const cards = pathOrder.map(key => {
-    const desc = paths[key] || "";
+    const desc  = paths[key] || "";
     const isRec = key === recommended;
-    const tags = pathLabels[key];
-    const t = tradeoffs[key] || {};
-
+    const tags  = pathLabels[key];
+    const t     = tradeoffs[key] || {};
     return `
       <div class="path-card ${isRec ? "recommended" : ""}">
         ${isRec ? `<div class="path-rec-badge">Recommended</div>` : ""}
@@ -106,8 +125,8 @@ function renderPaths(plan) {
         <div class="path-desc">${typeof desc === "string" ? desc : desc.description || JSON.stringify(desc)}</div>
         <div class="path-tags">
           <span class="path-tag ${isRec ? "accent" : ""}">Speed: ${t.speed || tags.speed}</span>
-          <span class="path-tag ${isRec ? "accent" : ""}">Cost: ${t.cost || tags.cost}</span>
-          <span class="path-tag ${isRec ? "accent" : ""}">Risk: ${t.risk || tags.risk}</span>
+          <span class="path-tag ${isRec ? "accent" : ""}">Cost: ${t.cost  || tags.cost}</span>
+          <span class="path-tag ${isRec ? "accent" : ""}">Risk: ${t.risk  || tags.risk}</span>
         </div>
       </div>`;
   }).join("");
@@ -121,7 +140,7 @@ function renderPaths(plan) {
 function renderDayPlan(id, items) {
   if (!items || items.length === 0) {
     document.getElementById(id).innerHTML =
-      `<p style="font-size:13px;color:#AAAAAA;">No items for this period.</p>`;
+      `<p style="font-size:13px;color:#AAAAAA;padding:8px 0;">No items for this period.</p>`;
     return;
   }
   document.getElementById(id).innerHTML =
@@ -129,12 +148,13 @@ function renderDayPlan(id, items) {
 }
 
 window.showPlan = (period) => {
-  ["30", "60", "90"].forEach(p => {
+  ["30","60","90"].forEach((p, i) => {
     document.getElementById(`plan-${p}`).classList.add("hidden");
-    document.querySelectorAll(".plan-tab").forEach((t, i) => {
-      if (["30","60","90"][i] === period) t.classList.add("active");
-      else t.classList.remove("active");
-    });
+    const tabs = document.querySelectorAll(".plan-tab");
+    if (tabs[i]) {
+      if (p === period) tabs[i].classList.add("active");
+      else tabs[i].classList.remove("active");
+    }
   });
   document.getElementById(`plan-${period}`).classList.remove("hidden");
 };
@@ -145,14 +165,18 @@ window.reset = () => {
 };
 
 function goPhase(n) {
-  [1, 3].forEach(i => {
+  [1,3].forEach(i => {
     document.getElementById(`phase-${i}`).classList.add("hidden");
     const t = document.getElementById(`tab-${i}`);
-    t.classList.remove("active", "done");
+    t.classList.remove("active","done");
     if (i < n) t.classList.add("done");
   });
   document.getElementById(`phase-${n}`).classList.remove("hidden");
   document.getElementById(`tab-${n}`).classList.add("active");
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function show(id) { document.getElementById(id).classList.remove("hidden"); }
