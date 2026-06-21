@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────
 // FLIP THIS TO true WHEN BACKEND IS READY
-const USE_REAL_API = false;
+const USE_REAL_API = true;
 const BACKEND_URL  = "https://launchlensbackend-production.up.railway.app";
 // ─────────────────────────────────────────────
 
