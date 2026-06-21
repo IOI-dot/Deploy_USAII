@@ -3,24 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LaunchLens</title>
+  <title>LaunchLens — Zero to One</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <div class="shell">
 
-  <!-- Header -->
   <div class="wordmark">Launch<span>Lens</span></div>
   <p class="tagline">Turn a vague idea into a real execution plan.</p>
 
-  <!-- Phase bar -->
   <div class="phase-bar">
     <div class="phase-tab active" id="tab-1">1 · Idea</div>
-    <div class="phase-tab"        id="tab-2">2 · Clarify</div>
-    <div class="phase-tab"        id="tab-3">3 · Plan</div>
+    <div class="phase-tab"        id="tab-3">2 · Plan</div>
   </div>
 
-  <!-- ======= PHASE 1 ======= -->
+  <!-- PHASE 1 -->
   <div id="phase-1">
     <div class="card">
       <div class="card-label">Your idea</div>
@@ -33,28 +30,10 @@
         <button class="chip" onclick="fillExample(3)">Freelance portfolio</button>
       </div>
     </div>
-    <button class="btn-primary" onclick="startClarify()">Clarify my idea →</button>
+    <button class="btn-primary" onclick="startPlan()">Build my plan →</button>
   </div>
 
-  <!-- ======= PHASE 2 ======= -->
-  <div id="phase-2" class="hidden">
-    <div id="p2-loading" class="loading">
-      <div class="dots"><span></span><span></span><span></span></div>
-      <p>Analyzing your idea...</p>
-    </div>
-    <div id="p2-content" class="hidden">
-      <div class="card">
-        <div class="card-label">A few quick questions</div>
-        <div id="questions-list"></div>
-      </div>
-      <div class="nav-row">
-        <button class="btn-ghost" onclick="goPhase(1)">← Back</button>
-        <button class="btn-primary" onclick="buildPlan()">Build my plan →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ======= PHASE 3 ======= -->
+  <!-- PHASE 3 -->
   <div id="phase-3" class="hidden">
     <div id="p3-loading" class="loading">
       <div class="dots"><span></span><span></span><span></span></div>
@@ -91,14 +70,15 @@
         </div>
       </div>
 
-      <div class="disclaimer">
-        LaunchLens surfaces structure and surfaces hidden risks — it does not predict success or make decisions for you.
-        Validate every assumption with real people before committing time or money. You stay in control of every choice.
-      </div>
+      <p class="disclaimer">
+        LaunchLens surfaces structure and hidden risks — it does not predict success or decide for you.
+        Validate every assumption with real people before committing time or money.
+      </p>
 
       <div class="nav-row" style="margin-top:1.5rem;">
         <button class="btn-ghost" onclick="reset()">← Start over</button>
       </div>
+
     </div>
   </div>
 

@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────
 // FLIP THIS TO true WHEN BACKEND IS READY
 const USE_REAL_API = false;
-const BACKEND_URL  = "https://THEIR-RAILWAY-URL.up.railway.app";
+const BACKEND_URL  = "https://launchlensbackend-production.up.railway.app";
 // ─────────────────────────────────────────────
 
 function mapToFrontend(data) {
