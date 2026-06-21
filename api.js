@@ -36,12 +36,34 @@ function mapToFrontend(data) {
   };
 }
 
+export async function getClarifyingQuestions(idea) {
+  if (USE_REAL_API) {
+    const res = await fetch(`${BACKEND_URL}/api/clarify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_input: idea })
+    });
+    if (!res.ok) throw new Error("Clarify endpoint error");
+    return await res.json();   // { questions: [...] }
+  }
+
+  await delay(900);
+  return {
+    questions: [
+      { id: "q1", question: "What is your budget for this?",          options: ["None or very limited", "Small budget available", "Funded or flexible"] },
+      { id: "q2", question: "How much time can you commit per week?", options: ["Under 5 hours", "5 to 15 hours", "15 or more hours"] },
+      { id: "q3", question: "What is your technical background?",     options: ["Non-technical", "Some experience", "Developer"] },
+      { id: "q4", question: "What is your target timeline?",          options: ["Under a month", "1 to 3 months", "3 to 6 months", "Flexible"] }
+    ]
+  };
+}
+
 export async function getExecutionPlan(idea, context = {}) {
   if (USE_REAL_API) {
     const res = await fetch(`${BACKEND_URL}/api/plan`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_input: idea, context })   // context forwarded to backend
+      body: JSON.stringify({ user_input: idea, context })
     });
     if (!res.ok) {
       const err = await res.json();
@@ -67,13 +89,13 @@ export async function getExecutionPlan(idea, context = {}) {
     ],
     executionPaths: {
       conservative: "Build slowly, validate every step, minimal cost.",
-      balanced: "Move steadily, test with real users at each milestone.",
-      aggressive: "Ship fast, iterate based on live feedback."
+      balanced:     "Move steadily, test with real users at each milestone.",
+      aggressive:   "Ship fast, iterate based on live feedback."
     },
     tradeoffs: {
-      conservative: { speed: "Slow", cost: "Low", risk: "Low" },
+      conservative: { speed: "Slow",   cost: "Low",    risk: "Low"    },
       balanced:     { speed: "Medium", cost: "Medium", risk: "Medium" },
-      aggressive:   { speed: "Fast", cost: "High", risk: "High" }
+      aggressive:   { speed: "Fast",   cost: "High",   risk: "High"   }
     },
     recommendedPath: "balanced",
     reasoning: "The balanced path gives you enough speed to hit deadlines while reducing the risk of building the wrong thing.",

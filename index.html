@@ -34,53 +34,22 @@
     <button class="btn-primary" onclick="startPlan()">Next: Tell us about yourself →</button>
   </div>
 
-  <!-- PHASE 2: Context -->
+  <!-- PHASE 2 -->
   <div id="phase-2" class="hidden">
-    <div class="card">
-      <div class="card-label">Quick context</div>
-      <p class="context-intro">A few answers let us tailor your plan to what's actually realistic for you. All optional — just tap to answer.</p>
-
-      <div class="context-group">
-        <div class="context-q">What's your financial situation?</div>
-        <div class="chips">
-          <button class="chip ctx-chip" data-group="budget" onclick="selectOption('budget','very limited',this)">💸 Very limited</button>
-          <button class="chip ctx-chip" data-group="budget" onclick="selectOption('budget','some savings',this)">💰 Some savings</button>
-          <button class="chip ctx-chip" data-group="budget" onclick="selectOption('budget','comfortable',this)">✅ Comfortable</button>
-        </div>
-      </div>
-
-      <div class="context-group">
-        <div class="context-q">Hours you can commit per week?</div>
-        <div class="chips">
-          <button class="chip ctx-chip" data-group="time" onclick="selectOption('time','less than 5 hours per week',this)">≤ 5 hrs</button>
-          <button class="chip ctx-chip" data-group="time" onclick="selectOption('time','5 to 15 hours per week',this)">5–15 hrs</button>
-          <button class="chip ctx-chip" data-group="time" onclick="selectOption('time','more than 15 hours per week',this)">15+ hrs</button>
-        </div>
-      </div>
-
-      <div class="context-group">
-        <div class="context-q">Technical background?</div>
-        <div class="chips">
-          <button class="chip ctx-chip" data-group="tech" onclick="selectOption('tech','non-technical',this)">Non-technical</button>
-          <button class="chip ctx-chip" data-group="tech" onclick="selectOption('tech','some coding experience',this)">Some coding</button>
-          <button class="chip ctx-chip" data-group="tech" onclick="selectOption('tech','developer',this)">Developer</button>
-        </div>
-      </div>
-
-      <div class="context-group">
-        <div class="context-q">Target timeline?</div>
-        <div class="chips">
-          <button class="chip ctx-chip" data-group="timeline" onclick="selectOption('timeline','under 1 month',this)">< 1 month</button>
-          <button class="chip ctx-chip" data-group="timeline" onclick="selectOption('timeline','1 to 3 months',this)">1–3 months</button>
-          <button class="chip ctx-chip" data-group="timeline" onclick="selectOption('timeline','3 to 6 months',this)">3–6 months</button>
-          <button class="chip ctx-chip" data-group="timeline" onclick="selectOption('timeline','flexible',this)">Flexible</button>
-        </div>
-      </div>
+    <div id="p2-loading" class="loading">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <p>Generating your questions...</p>
     </div>
-
-    <div class="nav-row">
-      <button class="btn-ghost" onclick="goBack()">← Back</button>
-      <button class="btn-primary" onclick="buildPlan()">Generate my plan →</button>
+    <div id="p2-content" class="hidden">
+      <div class="card">
+        <div class="card-label">A few quick questions</div>
+        <p class="context-intro">Answer what you can — all optional. These help us tailor the plan to your actual situation.</p>
+        <div id="context-questions"></div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-ghost" onclick="goBack()">← Back</button>
+        <button class="btn-primary" onclick="buildPlan()">Generate my plan →</button>
+      </div>
     </div>
   </div>
 
@@ -90,9 +59,8 @@
       <div class="dots"><span></span><span></span><span></span></div>
       <p>Building your execution plan...</p>
     </div>
-    <div id="p3-content" class="hidden fade-in">
+    <div id="p3-content" class="hidden">
 
-      <!-- SUMMARY BAR -->
       <div id="summary-bar" class="summary-bar">
         <div class="summary-pill" id="summary-type"></div>
         <div class="summary-pill accent" id="summary-path"></div>
@@ -152,6 +120,7 @@
 
       <div class="nav-row" style="margin-top:1.5rem;">
         <button class="btn-ghost" onclick="reset()">← Start over</button>
+        <button class="btn-ghost" onclick="downloadPDF()">Save as PDF</button>
       </div>
 
     </div>
